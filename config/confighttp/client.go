@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -300,8 +301,12 @@ func (cc *ClientConfig) ToClient(ctx context.Context, extensions map[component.I
 		return nil, err
 	}
 	transport := http.DefaultTransport.(*http.Transport).Clone()
+	transport.DialContext = (&net.Dialer{
+		Timeout: 5 * time.Second,
+	}).DialContext
 	if tlsCfg != nil {
 		transport.TLSClientConfig = tlsCfg
+		transport.TLSHandshakeTimeout = 5 * time.Second
 	}
 	if cc.ReadBufferSize > 0 {
 		transport.ReadBufferSize = cc.ReadBufferSize
