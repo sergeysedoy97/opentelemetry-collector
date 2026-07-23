@@ -129,7 +129,7 @@ func TestDefaultGrpcClientSettings(t *testing.T) {
 	 * - WithTransportCredentials (TLS)
 	 * - WithStatsHandler (always, for self-telemetry)
 	 */
-	assert.Len(t, opts, 3)
+	assert.Len(t, opts, 8)
 }
 
 func TestGrpcClientExtraOption(t *testing.T) {
@@ -152,7 +152,7 @@ func TestGrpcClientExtraOption(t *testing.T) {
 	 * - WithStatsHandler (always, for self-telemetry)
 	 * - extraOpt
 	 */
-	assert.Len(t, opts, 4)
+	assert.Len(t, opts, 9)
 	assert.Equal(t, opts[3], extraOpt)
 }
 
@@ -260,7 +260,7 @@ func TestAllGrpcClientSettings(t *testing.T) {
 			 * - WithPerRPCCredentials (Auth)
 			 * - WithUnaryInterceptor/WithStreamInterceptor (Headers)
 			 */
-			assert.Len(t, opts, 11)
+			assert.Len(t, opts, 16)
 		})
 	}
 }
@@ -653,7 +653,7 @@ func TestUseSecure(t *testing.T) {
 	}
 	dialOpts, err := cc.getGrpcDialOptions(context.Background(), nil, componenttest.NewNopTelemetrySettings(), []ToClientConnOption{})
 	require.NoError(t, err)
-	assert.Len(t, dialOpts, 3)
+	assert.Len(t, dialOpts, 8)
 }
 
 func TestGRPCServerSettingsError(t *testing.T) {
@@ -1427,5 +1427,5 @@ func TestGrpcClientUserAgent(t *testing.T) {
 	 * - WithStatsHandler (always, for self-telemetry)
 	 * - WithUserAgent (from UserAgent field)
 	 */
-	assert.Len(t, opts, 4)
+	assert.Len(t, opts, 9)
 }

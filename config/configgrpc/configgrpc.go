@@ -18,6 +18,7 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"go.opentelemetry.io/otel"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/backoff"
 	"google.golang.org/grpc/balancer"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
@@ -486,6 +487,16 @@ func (cc *ClientConfig) getGrpcDialOptions(
 	if cc.UserAgent != "" {
 		opts = append(opts, grpc.WithUserAgent(cc.UserAgent))
 	}
+
+	opts = append(opts, grpc.WithConnectParams(grpc.ConnectParams{
+		Backoff: backoff.Config{
+			BaseDelay:  time.Second,
+			Multiplier: 1,
+			Jitter:     0,
+			MaxDelay:   time.Second,
+		},
+		MinConnectTimeout: time.Second,
+	}), grpc.WithDisableHealthCheck(), grpc.WithDisableRetry(), grpc.WithIdleTimeout(5*time.Minute), grpc.WithMaxCallAttempts(2))
 
 	return opts, nil
 }
